@@ -19,7 +19,7 @@ export default function SignUpPrompt() {
               Sign up now to follow topics, connect with people, and share your
               thoughts.
             </p>
-            <div className="flex flex-row gap-3 justify-center w-full">
+            <div className="flex flex-col gap-3 justify-center w-full">
               <SignupModal />
               <LoginModal />
             </div>
