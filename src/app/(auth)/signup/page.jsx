@@ -2,23 +2,26 @@
 
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
+import { closeSignupModal, openLoginModal } from "@/redux/slices/modalSlice";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // For now, just fake auth — later we’ll replace with Firebase
+    // Fake auth for now
     dispatch(login({ name: formData.name, email: formData.email }));
-    router.push("/");
+    dispatch(closeSignupModal()); // Close modal on success
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex justify-center items-center bg-gray-50">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-md w-96"
@@ -45,7 +48,9 @@ export default function SignupPage() {
           placeholder="Password"
           className="w-full mb-6 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
           required
         />
         <button
@@ -56,9 +61,16 @@ export default function SignupPage() {
         </button>
         <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-green-600 font-medium hover:underline">
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(closeSignupModal());
+              dispatch(openLoginModal());
+            }}
+            className="text-green-600 font-medium hover:underline"
+          >
             Log In
-          </a>
+          </button>
         </p>
       </form>
     </div>

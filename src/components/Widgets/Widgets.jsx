@@ -1,6 +1,5 @@
 "use client";
 
-import SignUpPrompt from "../SignUpPrompt/SignUpPrompt";
 
 export default function Widgets() {
   return (
@@ -107,7 +106,6 @@ export default function Widgets() {
           </button>
         </div>
       </div>
-      <SignUpPrompt/>
 
     </aside>
   );

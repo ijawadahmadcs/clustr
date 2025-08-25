@@ -6,17 +6,14 @@ const PostFeed = () => {
   const [posts, setPosts] = useState([
     { id: 1, user: "Guest", handle: "@guest000234", time: "1d", text: "Hello World!" },
     { id: 2, user: "Guest", handle: "@guest000234", time: "2d", text: "Social Media App 🚀" },
-    { id: 1, user: "Guest", handle: "@guest000234", time: "1d", text: "Hello World!" },
-    { id: 2, user: "Guest", handle: "@guest000234", time: "2d", text: "Social Media App 🚀" },
-    { id: 1, user: "Guest", handle: "@guest000234", time: "1d", text: "Hello World!" },
-    { id: 2, user: "Guest", handle: "@guest000234", time: "2d", text: "Social Media App 🚀" },
+    { id: 3, user: "Guest", handle: "@guest000234", time: "3d", text: "Testing Clustr feed 🎉" },
   ]);
   const [newPost, setNewPost] = useState("");
 
   const handlePost = () => {
     if (!newPost.trim()) return;
     const post = {
-      id: Date.now(),
+      id: Date.now(), 
       user: "Guest",
       handle: "@guest000234",
       time: "now",
@@ -33,6 +30,7 @@ const PostFeed = () => {
         Home
       </div>
 
+      {/* New Post Box */}
       <div className="flex gap-3 p-4 border-b border-gray-200">
         <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm">G</div>
         <div className="flex-1">
@@ -43,7 +41,6 @@ const PostFeed = () => {
             className="w-full resize-none bg-transparent text-gray-800 text-lg focus:outline-none"
           />
           <div className="flex justify-between items-center mt-2">
-            {/* Icons */}
             <div className="flex gap-3 text-[#2ad14e]">
               <Image size={20} className="cursor-pointer hover:scale-110 transition" />
               <BarChart2 size={20} className="cursor-pointer hover:scale-110 transition" />
@@ -62,11 +59,11 @@ const PostFeed = () => {
 
       {/* Posts */}
       {posts.map((post) => (
-        <div key={post.id} className="flex gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition">
-          {/* Avatar */}
+        <div
+          key={post.id} 
+          className="flex gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition"
+        >
           <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm">G</div>
-
-          {/* Post Content */}
           <div className="flex-1">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span className="font-semibold text-black">{post.user}</span>
@@ -74,21 +71,11 @@ const PostFeed = () => {
               <span>· {post.time}</span>
             </div>
             <p className="text-gray-800 mt-1">{post.text}</p>
-
-            {/* Actions */}
             <div className="flex justify-between text-gray-500 mt-3 max-w-md">
-              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
-                <MessageCircle size={18} /> 
-              </button>
-              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
-                <Heart size={18} /> 
-              </button>
-              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
-                <BarChart3 size={18} /> 
-              </button>
-              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
-                <Share size={18} /> 
-              </button>
+              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition"><MessageCircle size={18} /></button>
+              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition"><Heart size={18} /></button>
+              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition"><BarChart3 size={18} /></button>
+              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition"><Share size={18} /></button>
             </div>
           </div>
         </div>

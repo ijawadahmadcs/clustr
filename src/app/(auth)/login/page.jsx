@@ -2,23 +2,22 @@
 
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
+import { closeLoginModal, openSignupModal } from "@/redux/slices/modalSlice";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Fake auth (for now) → later validate with Firebase
+    // Fake auth (replace with Firebase later)
     dispatch(login({ email: formData.email }));
-    router.push("/");
+    dispatch(closeLoginModal()); // Close modal on success
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-50">
+    <div className="flex justify-center items-center bg-gray-50">
       <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-2xl shadow-md w-96"
@@ -37,7 +36,9 @@ export default function LoginPage() {
           placeholder="Password"
           className="w-full mb-6 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
           value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }
           required
         />
         <button
@@ -48,9 +49,16 @@ export default function LoginPage() {
         </button>
         <p className="text-center text-sm mt-4">
           New here?{" "}
-          <a href="/signup" className="text-green-600 font-medium hover:underline">
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(closeLoginModal());
+              dispatch(openSignupModal());
+            }}
+            className="text-green-600 font-medium hover:underline"
+          >
             Sign Up
-          </a>
+          </button>
         </p>
       </form>
     </div>

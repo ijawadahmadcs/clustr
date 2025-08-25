@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import SignUpPrompt from "../SignUpPrompt/SignUpPrompt";
+
 import {
   Home,
   Search,
@@ -24,19 +26,24 @@ const SideBar = () => {
   return (
     <>
       {/* Sidebar always visible */}
-      <nav className="flex flex-col justify-between h-screen w-20 sm:w-56 p-4 border-r border-gray-200 sticky top-0">
+      <nav
+        className="flex flex-col justify-between h-screen 
+                w-14 sm:w-56 p-2 sm:p-4 
+                border-r border-gray-200 sticky top-0"
+      >
         {/* Logo */}
-        <div className="text-2xl sm:text-3xl font-bold text-[#2ad14e] mb-6">
-          C
-          <span className="hidden sm:inline">lustr</span>
+        <div className="text-xl sm:text-3xl font-bold text-[#2ad14e] mb-6 text-center sm:text-left">
+          C<span className="hidden sm:inline">lustr</span>
         </div>
 
         {/* Nav Items */}
-        <ul className="flex-1 flex flex-col gap-3">
+        <ul className="flex-1 flex flex-col gap-2 sm:gap-3">
           {navItems.map((item, idx) => (
             <li
               key={idx}
-              className="flex items-center gap-3 px-3 py-2 rounded-2xl hover:bg-[#47e669] cursor-pointer transition"
+              className="flex items-center justify-center sm:justify-start gap-0 sm:gap-3 
+                   px-2 sm:px-3 py-2 rounded-xl 
+                   hover:bg-[#47e669] cursor-pointer transition"
             >
               {item.icon}
               <span className="hidden sm:inline text-base font-medium">
@@ -51,15 +58,16 @@ const SideBar = () => {
           </button>
 
           {/* Post button - Mobile */}
-          <button className="sm:hidden mt-4 rounded-full bg-[#47e669] w-12 h-12 flex items-center justify-center text-white font-bold shadow-md hover:bg-[#2ad14e] transition">
+          <button className="sm:hidden mt-4 rounded-full bg-[#47e669] w-10 h-10 flex items-center justify-center text-white font-bold shadow-md hover:bg-[#2ad14e] transition">
             +
           </button>
         </ul>
 
+        <SignUpPrompt />
+
         {/* User Section */}
-        <div className="mt-4 px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm cursor-pointer hover:bg-gray-200 flex justify-center sm:justify-start">
+        <div className="mt-4 px-2 sm:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center sm:justify-start">
           <span className="hidden sm:inline">Guest</span>
-          <span className="sm:hidden"></span>
         </div>
       </nav>
     </>
