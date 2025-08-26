@@ -1,11 +1,15 @@
 "use client";
+import { useState } from "react";
 import { Modal } from "@mui/material";
 import { X } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { closeLoginModal, openSignupModal } from "@/redux/slices/modalSlice";
-import { login } from "@/redux/slices/authSlice";
-import { useState } from "react";
-import { auth } from "@/firebase"; // firebase config
+import {
+  closeLoginModal,
+  openSignupModal,
+  openLoginModal,
+} from "@/redux/slices/modalSlice";
+import { login } from "@/redux/slices/authSlice.js";
+import { auth } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginModal = () => {
@@ -15,40 +19,37 @@ const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-
       const user = userCredential.user;
 
-      // Update Redux state
+      // Save user in Redux
       dispatch(login({ email: user.email, uid: user.uid }));
 
-      // Close modal
-      dispatch(closeLoginModal());
-
-      // Reset form
+      // Reset and close
       setEmail("");
       setPassword("");
+      dispatch(closeLoginModal());
     } catch (err) {
       setError(err.message);
-      console.error("Login failed:", err);
     }
+    setLoading(false);
   };
 
   return (
     <div>
-      {/* Correct trigger button */}
       <button
-        onClick={() => dispatch({ type: "modal/openLoginModal" })} // Open login modal
+        onClick={() => dispatch(openLoginModal())}
         className="w-32 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-full transition"
       >
         Log In
@@ -56,18 +57,28 @@ const LoginModal = () => {
 
       <Modal
         open={isOpen}
-        onClose={() => dispatch(closeLoginModal())}
+        onClose={() => {
+          dispatch(closeLoginModal());
+          setError("");
+          setEmail("");
+          setPassword("");
+        }}
         className="flex items-center justify-center"
       >
-        <div className="w-[90%] max-w-[500px] bg-white rounded-2xl shadow-lg relative flex justify-center items-center p-6">
+        <div className="w-[90%] max-w-[500px] bg-white rounded-2xl shadow-lg relative p-6">
           <button
-            onClick={() => dispatch(closeLoginModal())}
+            onClick={() => {
+              dispatch(closeLoginModal());
+              setError("");
+              setEmail("");
+              setPassword("");
+            }}
             className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
           >
             <X size={20} className="text-gray-500" />
           </button>
 
-          <form onSubmit={handleSubmit} className="bg-white w-full">
+          <form onSubmit={handleLogin} className="w-full">
             <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
 
             {error && (
@@ -93,9 +104,12 @@ const LoginModal = () => {
 
             <button
               type="submit"
-              className="w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition"
+              className={`w-full py-3 rounded-lg text-white ${
+                loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
+              } transition`}
+              disabled={loading}
             >
-              Log In
+              {loading ? "Logging in..." : "Log In"}
             </button>
 
             <p className="text-center text-sm mt-4">
