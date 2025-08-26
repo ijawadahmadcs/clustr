@@ -5,10 +5,9 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUser } from "@/redux/slices/userSlice";
-const Signup = () => {
+const UserProfile = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  console.log("bbbbbb", name);
 
   const handleSignout = async () => {
     await signOut(auth);
@@ -20,7 +19,7 @@ const Signup = () => {
       className="mt-4 px-2 sm:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center sm:justify-start"
     >
       <Image
-        src={""}
+        src={"/clustr_logo.jpeg"}
         width={36}
         height={36}
         alt="Profile"
@@ -34,4 +33,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default UserProfile;

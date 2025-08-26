@@ -11,7 +11,7 @@ import {
   User,
   MoreHorizontal,
 } from "lucide-react";
-import Signup from "../buttonsSignup/Signup";
+import UserProfile from "../UserProfile/UserProfile";
 
 const navItems = [
   { name: "Home", icon: <Home size={22} /> },
@@ -65,7 +65,7 @@ const SideBar = () => {
         </ul>
 
         <SignUpPrompt />
-        <Signup />
+        <UserProfile />
       </nav>
     </>
   );
