@@ -8,9 +8,8 @@ import {
   openSignupModal,
   openLoginModal,
 } from "@/redux/slices/modalSlice";
-import { login } from "@/redux/slices/authSlice.js";
 import { auth } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
@@ -18,33 +17,14 @@ const LoginModal = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Save user in Redux
-      dispatch(login({ email: user.email, uid: user.uid }));
-
-      // Reset and close
-      setEmail("");
-      setPassword("");
-      dispatch(closeLoginModal());
-    } catch (err) {
-      setError(err.message);
-    }
-    setLoading(false);
-  };
+  async function handleLogin() {
+    const userCredentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+  }
 
   return (
     <div>
@@ -56,34 +36,24 @@ const LoginModal = () => {
       </button>
 
       <Modal
+        className="flex items-center justify-center"
         open={isOpen}
         onClose={() => {
           dispatch(closeLoginModal());
-          setError("");
-          setEmail("");
-          setPassword("");
         }}
-        className="flex items-center justify-center"
       >
         <div className="w-[90%] max-w-[500px] bg-white rounded-2xl shadow-lg relative p-6">
           <button
+            className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
             onClick={() => {
               dispatch(closeLoginModal());
-              setError("");
-              setEmail("");
-              setPassword("");
             }}
-            className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
           >
             <X size={20} className="text-gray-500" />
           </button>
 
-          <form onSubmit={handleLogin} className="w-full">
+          <div className="w-full">
             <h1 className="text-2xl font-bold text-center mb-6">Log In</h1>
-
-            {error && (
-              <p className="text-red-500 text-sm mb-3 text-center">{error}</p>
-            )}
 
             <input
               type="email"
@@ -103,17 +73,15 @@ const LoginModal = () => {
             />
 
             <button
+              onClick={() => handleLogin()}
               type="submit"
-              className={`w-full py-3 rounded-lg text-white ${
-                loading ? "bg-gray-400" : "bg-green-500 hover:bg-green-600"
-              } transition`}
-              disabled={loading}
+              className={`w-full py-3 rounded-lg text-white bg-green-500 hover:bg-green-600`}
             >
-              {loading ? "Logging in..." : "Log In"}
+              Login
             </button>
 
             <p className="text-center text-sm mt-4">
-              Don’t have an account?{" "}
+              Don't have an account?{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -125,7 +93,7 @@ const LoginModal = () => {
                 Sign Up
               </button>
             </p>
-          </form>
+          </div>
         </div>
       </Modal>
     </div>
