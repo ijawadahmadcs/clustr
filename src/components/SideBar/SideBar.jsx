@@ -11,6 +11,7 @@ import {
   User,
   MoreHorizontal,
 } from "lucide-react";
+import Signup from "../buttonsSignup/Signup";
 
 const navItems = [
   { name: "Home", icon: <Home size={22} /> },
@@ -64,11 +65,7 @@ const SideBar = () => {
         </ul>
 
         <SignUpPrompt />
-
-        {/* User Section */}
-        <div className="mt-4 px-2 sm:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center sm:justify-start">
-          <span className="hidden sm:inline">Guest</span>
-        </div>
+        <Signup />
       </nav>
     </>
   );

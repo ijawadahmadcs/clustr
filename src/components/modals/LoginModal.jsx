@@ -9,7 +9,7 @@ import {
   openLoginModal,
 } from "@/redux/slices/modalSlice";
 import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
@@ -18,13 +18,16 @@ const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  async function handleLogin() {
-    const userCredentials = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-  }
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      dispatch(closeLoginModal());
+      setEmail("");
+      setPassword("");
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -40,6 +43,8 @@ const LoginModal = () => {
         open={isOpen}
         onClose={() => {
           dispatch(closeLoginModal());
+          setEmail("");
+          setPassword("");
         }}
       >
         <div className="w-[90%] max-w-[500px] bg-white rounded-2xl shadow-lg relative p-6">
@@ -47,6 +52,8 @@ const LoginModal = () => {
             className="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-100"
             onClick={() => {
               dispatch(closeLoginModal());
+              setEmail("");
+              setPassword("");
             }}
           >
             <X size={20} className="text-gray-500" />
@@ -73,9 +80,9 @@ const LoginModal = () => {
             />
 
             <button
-              onClick={() => handleLogin()}
-              type="submit"
-              className={`w-full py-3 rounded-lg text-white bg-green-500 hover:bg-green-600`}
+              onClick={handleLogin}
+              type="button"
+              className="w-full py-3 rounded-lg text-white bg-green-500 hover:bg-green-600"
             >
               Login
             </button>
