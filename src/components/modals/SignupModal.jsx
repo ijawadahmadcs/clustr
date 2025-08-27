@@ -15,6 +15,7 @@ import {
 } from "firebase/auth";
 import { auth } from "@/firebase";
 import { signInUser } from "@/redux/slices/userSlice";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const SignupModal = () => {
   const isOpen = useSelector((state) => state.modal.signupModalOpen);
@@ -70,6 +71,26 @@ const SignupModal = () => {
 
     return unsubscribe;
   }, [dispatch]);
+  async function handleGoogleSignup() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      dispatch(
+        signInUser({
+          name: user.displayName,
+          username: user.email.split("@")[0],
+          email: user.email,
+          uid: user.uid,
+        })
+      );
+
+      dispatch(closeSignupModal());
+    } catch (err) {
+      setError(err.message);
+    }
+  }
 
   return (
     <div>
@@ -129,6 +150,26 @@ const SignupModal = () => {
               className="w-full py-3 rounded-lg text-white bg-green-500 hover:bg-green-600"
             >
               Sign Up
+            </button>
+            <div className="flex items-center my-4">
+              <hr className="flex-grow border-gray-300" />
+              <span className="px-2 text-gray-400 text-sm">OR</span>
+              <hr className="flex-grow border-gray-300" />
+            </div>
+
+            <button
+              onClick={handleGoogleSignup}
+              type="button"
+              className="w-full py-3 rounded-lg border border-gray-300 flex items-center justify-center gap-2 hover:bg-gray-50"
+            >
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span className="text-gray-700 font-medium">
+                Sign Up with Google
+              </span>
             </button>
 
             <p className="text-center text-sm mt-4">

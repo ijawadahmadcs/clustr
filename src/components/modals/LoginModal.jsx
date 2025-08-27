@@ -8,8 +8,9 @@ import {
   openSignupModal,
   openLoginModal,
 } from "@/redux/slices/modalSlice";
-import { auth } from "@/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, googleProvider } from "@/firebase";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { signInUser } from "@/redux/slices/userSlice";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
@@ -20,12 +21,37 @@ const LoginModal = () => {
 
   const handleLogin = async () => {
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      dispatch(
+        signInUser({
+          name: result.user.displayName,
+          username: result.user.email.split("@")[0],
+          email: result.user.email,
+          uid: result.user.uid,
+        })
+      );
       dispatch(closeLoginModal());
       setEmail("");
       setPassword("");
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      dispatch(
+        signInUser({
+          name: result.user.displayName,
+          username: result.user.email.split("@")[0],
+          email: result.user.email,
+          uid: result.user.uid,
+        })
+      );
+      dispatch(closeLoginModal());
+    } catch (err) {
+      console.error("Google Login Error:", err);
     }
   };
 
@@ -85,6 +111,27 @@ const LoginModal = () => {
               className="w-full py-3 rounded-lg text-white bg-green-500 hover:bg-green-600"
             >
               Login
+            </button>
+
+            <div className="flex items-center my-4">
+              <hr className="flex-grow border-gray-300" />
+              <span className="px-2 text-gray-400 text-sm">OR</span>
+              <hr className="flex-grow border-gray-300" />
+            </div>
+
+            <button
+              onClick={handleGoogleLogin}
+              type="button"
+              className="w-full py-3 rounded-lg border border-gray-300 flex items-center justify-center gap-2 hover:bg-gray-50"
+            >
+              <img
+                src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                alt="Google"
+                className="w-5 h-5"
+              />
+              <span className="text-gray-700 font-medium">
+                Sign in with Google
+              </span>
             </button>
 
             <p className="text-center text-sm mt-4">
