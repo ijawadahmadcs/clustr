@@ -4,15 +4,15 @@ import React, { useEffect, useState } from "react";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "@/firebase";
 import { MessageCircle, Heart, BarChart3, Share } from "lucide-react";
+import moment from "moment/moment";
+import { openCommentModal } from "@/redux/slices/modalSlice";
+import { useDispatch } from "react-redux";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
-
+  const dispatch = useDispatch();
   useEffect(() => {
-    // build query -> order by timestamp desc
     const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
-
-    // realtime listener
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const fetchedPosts = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -21,7 +21,6 @@ const Post = () => {
       setPosts(fetchedPosts);
     });
 
-    // cleanup listener on unmount
     return () => unsubscribe();
   }, []);
 
@@ -32,25 +31,25 @@ const Post = () => {
           key={post.id}
           className="flex gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition"
         >
-          {/* Avatar */}
           <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm">
             {post?.username?.[0]?.toUpperCase() || "U"}
           </div>
 
-          {/* Content */}
           <div className="flex-1">
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <span className="font-semibold text-black">{post?.name}</span>
               <span>@{post?.username}</span>
-              <span>
-                · {post?.timestamp?.toDate?.().toLocaleString?.() || "just now"}
-              </span>
+              {post.timestamp && (
+                <span>{moment(post.timestamp.toDate()).fromNow()}</span>
+              )}
             </div>
             <p className="text-gray-800 mt-1">{post?.text}</p>
 
-            {/* Action buttons */}
             <div className="flex justify-between text-gray-500 mt-3 max-w-md">
-              <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
+              <button
+                onClick={() => dispatch(openCommentModal())}
+                className="flex items-center gap-1 hover:text-[#2ad14e] transition"
+              >
                 <MessageCircle size={18} />
               </button>
               <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
