@@ -14,7 +14,7 @@ import {
 import { db } from "@/firebase";
 import { MessageCircle, Heart, BarChart3, Share } from "lucide-react";
 import moment from "moment/moment";
-import { openCommentModal } from "@/redux/slices/modalSlice";
+import { openCommentModal, openLoginModal } from "@/redux/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Post = ({ data, id }) => {
@@ -35,6 +35,11 @@ const Post = ({ data, id }) => {
   const user = useSelector((state) => state.user);
 
   async function likePost(post) {
+    if (!user?.username) {
+      dispatch(openLoginModal());
+      return;
+    }
+
     const postRef = doc(db, "posts", post.id);
 
     if (post.likes?.includes(user.uid)) {

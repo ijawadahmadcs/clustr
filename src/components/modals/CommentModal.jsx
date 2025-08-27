@@ -1,5 +1,5 @@
 "use client";
-import { closeCommentModal } from "@/redux/slices/modalSlice";
+import { closeCommentModal, openLoginModal } from "@/redux/slices/modalSlice";
 import { Modal } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +27,11 @@ const CommentModal = () => {
   }, [selectedPost]);
 
   const handleSendReply = async () => {
+    if (!user?.username) {
+      dispatch(openLoginModal());
+      return;
+    }
+
     if (!reply.trim() || !selectedPost) return;
 
     const postRef = doc(db, "posts", selectedPost.id);
@@ -51,7 +56,6 @@ const CommentModal = () => {
       <div className="w-[500px] bg-white rounded-2xl p-5 shadow-2xl">
         {selectedPost && (
           <>
-            {/* Post being replied to */}
             <div className="flex gap-3 mb-5">
               <div className="w-10 h-10 rounded-full bg-gray-300"></div>
               <div>
@@ -71,7 +75,6 @@ const CommentModal = () => {
               </div>
             </div>
 
-            {/* Reply Input */}
             <div className="flex gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-gray-300"></div>
               <textarea
@@ -91,7 +94,6 @@ const CommentModal = () => {
               </button>
             </div>
 
-            {/* Replies */}
             <div className="mt-6 space-y-4 max-h-60 overflow-y-auto">
               <p>Replies:</p>
               {comments.map((c, i) => (

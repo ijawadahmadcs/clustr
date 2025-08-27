@@ -20,7 +20,7 @@ const UserProfile = () => {
         className="mt-4 px-2 sm:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center items-center sm:justify-start"
       >
         <Image
-          src={"/clustr_logo.jpeg"}
+          src={"/profile.avif"}
           width={36}
           height={36}
           alt="Profile"
