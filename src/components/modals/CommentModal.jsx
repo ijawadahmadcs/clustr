@@ -95,7 +95,7 @@ const CommentModal = () => {
             </div>
 
             <div className="mt-6 space-y-4 max-h-60 overflow-y-auto">
-              <p>Replies:</p>
+              <p className="font-bold">Replies:</p>
               {comments.map((c, i) => (
                 <div key={i} className="flex gap-3">
                   <div className="w-9 h-9 rounded-full bg-gray-300"></div>

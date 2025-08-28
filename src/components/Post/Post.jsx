@@ -16,10 +16,12 @@ import { MessageCircle, Heart, BarChart3, Share } from "lucide-react";
 import moment from "moment/moment";
 import { openCommentModal, openLoginModal } from "@/redux/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Link from "next/link";
 
 const Post = ({ data, id }) => {
   const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
+
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -32,6 +34,7 @@ const Post = ({ data, id }) => {
 
     return () => unsubscribe();
   }, []);
+
   const user = useSelector((state) => state.user);
 
   async function likePost(post) {
@@ -60,20 +63,40 @@ const Post = ({ data, id }) => {
           key={post.id}
           className="flex gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition"
         >
-          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm">
-            {post?.username?.[0]?.toUpperCase() || "U"}
-          </div>
+          {/* Profile Picture - Clickable */}
+          <Link href={`/profile/${post.username}`}>
+            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer hover:opacity-80 transition">
+              {post?.username?.[0]?.toUpperCase() || "U"}
+            </div>
+          </Link>
 
           <div className="flex-1">
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <span className="font-semibold text-black">{post?.name}</span>
-              <span>@{post?.username}</span>
+              {/* Name - Clickable */}
+              <Link
+                href={`/profile/${post.username}`}
+                className="font-semibold text-black hover:underline cursor-pointer"
+              >
+                {post?.name}
+              </Link>
+
+              {/* Username - Clickable */}
+              <Link
+                href={`/profile/${post.username}`}
+                className="hover:underline cursor-pointer"
+              >
+                @{post?.username}
+              </Link>
+
               {post.timestamp && (
                 <span>{moment(post.timestamp.toDate()).fromNow()}</span>
               )}
             </div>
+
+            {/* Post Content */}
             <p className="text-gray-800 mt-1">{post?.text}</p>
 
+            {/* Action Buttons */}
             <div className="flex justify-between text-gray-500 mt-3 max-w-md">
               <button
                 onClick={() => dispatch(openCommentModal(post))}
@@ -85,15 +108,23 @@ const Post = ({ data, id }) => {
 
               <button
                 onClick={() => likePost(post)}
-                className="flex items-center gap-1 hover:text-[#2ad14e] transition"
+                className={`flex items-center gap-1 hover:text-[#2ad14e] transition ${
+                  post.likes?.includes(user.uid) ? "text-[#2ad14e]" : ""
+                }`}
               >
-                <Heart size={18} />
+                <Heart
+                  size={18}
+                  fill={
+                    post.likes?.includes(user.uid) ? "currentColor" : "none"
+                  }
+                />
                 <span>{post.likes?.length || 0}</span>
               </button>
 
               <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
                 <BarChart3 size={18} />
               </button>
+
               <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
                 <Share size={18} />
               </button>

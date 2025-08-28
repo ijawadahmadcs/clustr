@@ -1,3 +1,4 @@
+// src/components/modals/SignupModal.jsx
 "use client";
 import { useEffect, useState } from "react";
 import { Modal } from "@mui/material";
@@ -13,9 +14,10 @@ import {
   onAuthStateChanged,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "@/firebase";
+import { auth, db } from "@/firebase";
 import { signInUser } from "@/redux/slices/userSlice";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 
 const SignupModal = () => {
   const isOpen = useSelector((state) => state.modal.signupModalOpen);
@@ -25,6 +27,30 @@ const SignupModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  // Function to create user profile in Firestore
+  const createUserProfile = async (user, displayName) => {
+    const username = user.email.split("@")[0];
+    const userRef = doc(db, "users", username);
+
+    await setDoc(userRef, {
+      username: username,
+      name: displayName || user.displayName || name,
+      email: user.email,
+      uid: user.uid,
+      bio: "",
+      location: "",
+      website: "",
+      profilePicture: "/profile.avif",
+      coverPhoto: "",
+      followers: [],
+      following: [],
+      joinedDate: serverTimestamp(),
+      verified: false,
+      postsCount: 0,
+      likesCount: 0,
+    });
+  };
 
   async function handleSignup() {
     setError("");
@@ -36,9 +62,12 @@ const SignupModal = () => {
       );
       await updateProfile(userCredentials.user, { displayName: name });
 
+      // Create user profile in Firestore
+      await createUserProfile(userCredentials.user, name);
+
       dispatch(
         signInUser({
-          name: userCredentials.user.displayName,
+          name: name,
           username: userCredentials.user.email.split("@")[0],
           email: userCredentials.user.email,
           uid: userCredentials.user.uid,
@@ -61,7 +90,7 @@ const SignupModal = () => {
         dispatch(
           signInUser({
             name: currentUser.displayName,
-            username: currentUser.email.split("@")[0],
+            username: currentUser.email?.split("@")[0],
             email: currentUser.email,
             uid: currentUser.uid,
           })
@@ -71,11 +100,15 @@ const SignupModal = () => {
 
     return unsubscribe;
   }, [dispatch]);
+
   async function handleGoogleSignup() {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      // Create user profile in Firestore
+      await createUserProfile(user);
 
       dispatch(
         signInUser({

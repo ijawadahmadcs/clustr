@@ -1,3 +1,4 @@
+// src/components/modals/LoginModal.jsx
 "use client";
 import { useState } from "react";
 import { Modal } from "@mui/material";
@@ -9,8 +10,10 @@ import {
   openLoginModal,
 } from "@/redux/slices/modalSlice";
 import { auth, googleProvider } from "@/firebase";
+import { db } from "@/firebase";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { signInUser } from "@/redux/slices/userSlice";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const LoginModal = () => {
   const dispatch = useDispatch();
@@ -19,12 +22,44 @@ const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // Function to create user profile if it doesn't exist
+  const ensureUserProfile = async (user) => {
+    const username = user.email.split("@")[0];
+    const userRef = doc(db, "users", username);
+    const userDoc = await getDoc(userRef);
+
+    // Only create if profile doesn't exist
+    if (!userDoc.exists()) {
+      await setDoc(userRef, {
+        username: username,
+        name: user.displayName || user.email.split("@")[0],
+        email: user.email,
+        uid: user.uid,
+        bio: "",
+        location: "",
+        website: "",
+        profilePicture: "/profile.avif",
+        coverPhoto: "",
+        followers: [],
+        following: [],
+        joinedDate: serverTimestamp(),
+        verified: false,
+        postsCount: 0,
+        likesCount: 0,
+      });
+    }
+  };
+
   const handleLogin = async () => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+
+      // Ensure user profile exists
+      await ensureUserProfile(result.user);
+
       dispatch(
         signInUser({
-          name: result.user.displayName,
+          name: result.user.displayName || result.user.email.split("@")[0],
           username: result.user.email.split("@")[0],
           email: result.user.email,
           uid: result.user.uid,
@@ -41,6 +76,10 @@ const LoginModal = () => {
   const handleGoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
+
+      // Ensure user profile exists
+      await ensureUserProfile(result.user);
+
       dispatch(
         signInUser({
           name: result.user.displayName,
