@@ -17,7 +17,7 @@ const UserProfile = () => {
     name && (
       <div
         onClick={handleSignout}
-        className="mt-4 px-2 sm:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center items-center sm:justify-start"
+        className="mt-4 md:px-3 py-2 rounded-lg bg-gray-100 text-gray-700 text-xs sm:text-sm cursor-pointer hover:bg-gray-200 flex justify-center items-center sm:justify-start"
       >
         <Image
           src={"/profile.avif"}
