@@ -70,34 +70,35 @@ const Post = ({ data, id }) => {
             </div>
           </Link>
 
-          <div className="flex-1">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              {/* Name - Clickable */}
-              <Link
-                href={`/profile/${post.username}`}
-                className="font-semibold text-black hover:underline cursor-pointer"
-              >
-                {post?.name}
-              </Link>
+          <div className="flex flex-col">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Link
+                  href={`/profile/${post.username}`}
+                  className="font-semibold text-black hover:underline cursor-pointer"
+                >
+                  {post?.name}
+                </Link>
 
-              {/* Username - Clickable */}
+                {post.timestamp && (
+                  <span className="text-gray-500 text-xs">
+                    • {moment(post.timestamp.toDate()).fromNow()}
+                  </span>
+                )}
+              </div>
+
               <Link
                 href={`/profile/${post.username}`}
-                className="hover:underline cursor-pointer"
+                className="hover:underline cursor-pointer text-gray-500 text-[12px]"
               >
                 @{post?.username}
               </Link>
-
-              {post.timestamp && (
-                <span>{moment(post.timestamp.toDate()).fromNow()}</span>
-              )}
             </div>
 
-            {/* Post Content */}
             <p className="text-gray-800 mt-1">{post?.text}</p>
 
-            {/* Action Buttons */}
-            <div className="flex justify-between text-gray-500 mt-3 max-w-md">
+            <div className="flex justify-around text-gray-500 mt-3 max-w-md w-full">
+              {/* Comment */}
               <button
                 onClick={() => dispatch(openCommentModal(post))}
                 className="flex items-center gap-1 hover:text-[#2ad14e] transition"
@@ -106,6 +107,7 @@ const Post = ({ data, id }) => {
                 <span>{post.comments?.length || 0}</span>
               </button>
 
+              {/* Like */}
               <button
                 onClick={() => likePost(post)}
                 className={`flex items-center gap-1 hover:text-[#2ad14e] transition ${
@@ -121,10 +123,12 @@ const Post = ({ data, id }) => {
                 <span>{post.likes?.length || 0}</span>
               </button>
 
+              {/* Views */}
               <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
                 <BarChart3 size={18} />
               </button>
 
+              {/* Share */}
               <button className="flex items-center gap-1 hover:text-[#2ad14e] transition">
                 <Share size={18} />
               </button>

@@ -34,10 +34,14 @@ const SideBar = () => {
   return (
     <>
       <nav
-        className="flex flex-col justify-between 
-             w-14 md:w-56 p-2 sm:p-4 
-             border-r border-gray-200 
-             min-h-screen overflow-y-auto h-fit sticky top-0"
+        className="
+    flex flex-col justify-between 
+    flex-shrink-0
+    w-16 sm:w-20 md:w-56 
+    p-2 sm:p-4 
+    border-r border-gray-200 
+    h-screen 
+  "
       >
         <Link href="/">
           <div className=" text-xl sm:text-3xl font-bold text-[#2ad14e] mb-6 text-center sm:text-left cursor-pointer hover:opacity-80 transition">
