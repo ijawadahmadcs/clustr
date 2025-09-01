@@ -18,9 +18,10 @@ import { openCommentModal, openLoginModal } from "@/redux/slices/modalSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 
-const Post = ({ data, id }) => {
+const Post = () => {
   const [posts, setPosts] = useState([]);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
@@ -34,8 +35,6 @@ const Post = ({ data, id }) => {
 
     return () => unsubscribe();
   }, []);
-
-  const user = useSelector((state) => state.user);
 
   async function likePost(post) {
     if (!user?.username) {
@@ -63,7 +62,7 @@ const Post = ({ data, id }) => {
           key={post.id}
           className="flex gap-3 p-4 border-b border-gray-200 hover:bg-gray-50 transition"
         >
-          {/* Profile Picture - Clickable */}
+          {/* Profile Picture */}
           <Link href={`/profile/${post.username}`}>
             <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-sm cursor-pointer hover:opacity-80 transition">
               {post?.username?.[0]?.toUpperCase() || "U"}

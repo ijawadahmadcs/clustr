@@ -32,59 +32,65 @@ const SideBar = () => {
   ];
 
   return (
-    <>
-      <nav
-        className="
-    flex flex-col justify-between 
-    flex-shrink-0
-    w-16 sm:w-20 md:w-56 
-    p-2 sm:p-4 
-    border-r border-gray-200 
-    h-screen 
-  "
-      >
-        <Link href="/">
-          <div className=" text-xl sm:text-3xl font-bold text-[#2ad14e] mb-6 text-center sm:text-left cursor-pointer hover:opacity-80 transition">
-            C<span className="hidden sm:inline">lustr</span>
-          </div>
-        </Link>
+    <aside
+      className="
+        fixed   /* <-- Makes sidebar stay visible on scroll */
+        top-0 left-0
+        flex flex-col justify-between
+        w-16 sm:w-20 md:w-56
+        h-screen
+        border-r border-gray-200
+        bg-white
+        p-2 sm:p-4
+        z-50
+      "
+    >
+      {/* Logo */}
+      <Link href="/">
+        <div className="text-xl sm:text-3xl font-bold text-[#2ad14e] mb-6 text-center sm:text-left cursor-pointer hover:opacity-80 transition">
+          C<span className="hidden sm:inline">lustr</span>
+        </div>
+      </Link>
 
-        <ul className="flex-1 flex flex-col gap-2 sm:gap-3">
-          {navItems.map((item, idx) => (
-            <li key={idx}>
-              {item.href === "#" ? (
+      {/* Navigation Items */}
+      <ul className="flex-1 flex flex-col gap-2 sm:gap-3 overflow-y-auto">
+        {navItems.map((item, idx) => (
+          <li key={idx}>
+            {item.href === "#" ? (
+              <div
+                className="flex items-center justify-center sm:justify-start gap-0 sm:gap-3 
+                  px-2 sm:px-3 py-2 rounded-xl 
+                  hover:bg-[#47e669] cursor-pointer transition"
+              >
+                {item.icon}
+                <span className="hidden sm:inline text-base font-medium">
+                  {item.name}
+                </span>
+              </div>
+            ) : (
+              <Link href={item.href}>
                 <div
                   className="flex items-center justify-center sm:justify-start gap-0 sm:gap-3 
-                     px-2 sm:px-3 py-2 rounded-xl 
-                     hover:bg-[#47e669] cursor-pointer transition"
+                    px-2 sm:px-3 py-2 rounded-xl 
+                    hover:bg-[#47e669] cursor-pointer transition"
                 >
                   {item.icon}
                   <span className="hidden sm:inline text-base font-medium">
                     {item.name}
                   </span>
                 </div>
-              ) : (
-                <Link href={item.href}>
-                  <div
-                    className="flex items-center justify-center sm:justify-start gap-0 sm:gap-3 
-                       px-2 sm:px-3 py-2 rounded-xl 
-                       hover:bg-[#47e669] cursor-pointer transition"
-                  >
-                    {item.icon}
-                    <span className="hidden sm:inline text-base font-medium">
-                      {item.name}
-                    </span>
-                  </div>
-                </Link>
-              )}
-            </li>
-          ))}
-        </ul>
-        <p className="mb-10"></p>
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
+
+      {/* Bottom Section */}
+      <div className="flex flex-col gap-3 mt-4">
         <SignUpPrompt />
         <LogoutIcon />
-      </nav>
-    </>
+      </div>
+    </aside>
   );
 };
 

@@ -22,21 +22,30 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {" "}
         <ReduxProvider>
           <ProfileProvider>
-            <div className="text-black bg-gray-100 min-h-screen max-w-[1400px] mx-auto flex">
-              <SideBar />
-              <main className="flex-1 border-x border-gray-200">
-                <div>{children}</div>
-              </main>
-              <div className="hidden lg:block w-[350px]">
+            <div
+              className="
+                text-black bg-gray-100 min-h-screen max-w-[1400px] mx-auto
+                grid grid-cols-12
+              "
+            >
+              {/* Sidebar */}
+              <aside className="col-span-2 lg:col-span-2">
+                <SideBar />
+              </aside>
+
+              {/* Main Content */}
+              <main className="col-span-10 lg:col-span-7">{children}</main>
+
+              {/* Widgets / Right Sidebar */}
+              <aside className="hidden lg:block col-span-3 p-2">
                 <Widgets />
-              </div>
+              </aside>
             </div>
           </ProfileProvider>
         </ReduxProvider>
