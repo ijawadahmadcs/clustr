@@ -43,7 +43,7 @@ export default function RootLayout({ children }) {
               <main className="col-span-10 lg:col-span-7">{children}</main>
 
               {/* Widgets / Right Sidebar */}
-              <aside className="hidden lg:block col-span-3 p-2">
+              <aside className="hidden lg:block col-span-3 p-2 bg-white">
                 <Widgets />
               </aside>
             </div>

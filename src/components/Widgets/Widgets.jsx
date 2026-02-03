@@ -62,13 +62,13 @@ export default function Widgets() {
   }, []);
 
   return (
-    <div className="hidden lg:block w-80 p-4 space-y-4">
-      <div className="sticky top-0 bg-gray-100 dark:bg-gray-900 z-10 pb-2">
+    <div className="hidden lg:block w-80 p-4 space-y-4 bg-white">
+      <div className="sticky top-0 z-10 pb-2">
         <div className="relative">
           <input
             type="text"
             placeholder="Search users..."
-            className="w-full rounded-full pl-10 pr-4 py-2 bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2ad14e]"
+            className="w-full rounded-full pl-10 pr-4 py-2 bg-white shadow-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-[#2ad14e]"
           />
           <svg
             className="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
@@ -86,7 +86,7 @@ export default function Widgets() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-4">
+      <div className="bg-white rounded-2xl shadow-md p-4">
         <h2 className="text-lg font-bold mb-2">Trending</h2>
         <ul className="space-y-2">
           {trendingTags.length > 0 ? (
@@ -101,7 +101,7 @@ export default function Widgets() {
         </ul>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-4">
+      <div className="bg-white rounded-2xl shadow-md p-4">
         <h2 className="text-lg font-bold mb-2">Who to follow</h2>
         {suggestedUsers.length > 0 ? (
           suggestedUsers.map((user) => (
